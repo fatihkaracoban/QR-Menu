@@ -1,0 +1,199 @@
+/* GENEL */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #f8f6f2;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+}
+
+/* HERO BÖLÜMÜ */
+.hero {
+    height: 260px;
+    background: url("/images/mekan.jpg") center/cover no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    color: white;
+    text-align: center;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.hero-logo {
+    width: 120px;
+    border-radius: 50%;
+    position: relative;
+    z-index: 2;
+    border: 3px solid white;
+}
+
+.hero-title {
+    font-size: 24px;
+    margin-top: 10px;
+    position: relative;
+    z-index: 2;
+    font-weight: bold;
+}
+
+/* ARAMA ÇUBUĞU */
+.search-section {
+    margin-top: -30px;
+    position: relative;
+    z-index: 10;
+}
+
+.search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 20px;
+    color: #888;
+    font-size: 18px;
+    pointer-events: none;
+}
+
+.search-bar {
+    padding: 15px 25px 15px 50px !important;
+    border-radius: 50px;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+#searchResults {
+    position: absolute;
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    border-radius: 0 0 15px 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    background: white;
+    display: none;
+}
+
+.search-item:hover {
+    background-color: #f8f9fa !important;
+}
+
+/* KATEGORİ KARTLARI */
+.category-card {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.category-card img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    transition: 0.3s;
+}
+
+.category-card:hover img {
+    transform: scale(1.05);
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+/* MENÜ ÖĞELERİ */
+.menu-item {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+.menu-img {
+    width: 75px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-right: 15px;
+}
+
+.menu-info {
+    flex: 1;
+}
+
+.menu-top {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+}
+
+.menu-price {
+    color: #28a745;
+}
+
+/* FLOATING BUTTON */
+.floating-call-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: #25d366;
+    color: white !important;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 2000;
+    text-decoration: none;
+    font-size: 24px;
+}
+
+/* Konum linkinin stilini temizliyoruz */
+.location-link {
+    text-decoration: none;
+    /* Alt çizgiyi kaldırır */
+    color: #333;
+    /* Klasik siyah/gri tonu yapar, mavi olmaz */
+    transition: color 0.3s;
+    display: inline-block;
+}
+
+.location-link:hover {
+    color: #007bff;
+    /* Üstüne gelince çok hafif bir renk değişimi (opsiyonel) */
+    text-decoration: none;
+}
+
+.location-link p {
+    margin-bottom: 10px;
+    font-weight: 500;
+}

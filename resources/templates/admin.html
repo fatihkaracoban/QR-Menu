@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yönetim Paneli</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        body {
+            background: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .admin-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: #fff;
+            padding: 15px 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-logout {
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-weight: 600;
+            border: 2px solid #dc3545;
+            color: #dc3545;
+            background: transparent;
+            text-decoration: none;
+            transition: .3s;
+        }
+
+        .btn-logout:hover {
+            background: #dc3545;
+            color: #fff;
+        }
+
+        .table img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        h4 {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 20px;
+            border-left: 5px solid #0d6efd;
+            padding-left: 15px;
+        }
+
+        .toast-container {
+            z-index: 2000;
+        }
+
+        /* DRAG DROP */
+
+        #adminCategoryTable tbody tr {
+            cursor: grab;
+        }
+
+        #adminCategoryTable tbody tr.dragging {
+            opacity: 0.5;
+        }
+
+        .drag-handle {
+            font-size: 18px;
+            color: #888;
+            margin-right: 8px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container py-4">
+
+        <div class="header-bar">
+            <h2 class="m-0 text-primary fw-bold">Yönetim Paneli</h2>
+
+            <form action="/logout" method="post" class="m-0">
+                <button type="submit" class="btn-logout">
+                    <i class="fa-solid fa-power-off me-2"></i> Güvenli Çıkış
+                </button>
+            </form>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-5">
+
+                <div class="admin-card">
+
+                    <h4>Kategori Ekle</h4>
+
+                    <input type="text" id="catName" class="form-control mb-2" placeholder="Kategori Adı">
+
+                    <input type="file" id="catImage" class="form-control mb-3">
+
+                    <button class="btn btn-primary w-100" onclick="addCategory()">Ekle</button>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-7">
+
+                <div class="admin-card">
+
+                    <h4>Ürün Ekle</h4>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <input type="text" id="prodName" class="form-control mb-2" placeholder="Ürün Adı">
+                        </div>
+
+                        <div class="col-md-6">
+                            <input type="text" id="prodPrice" class="form-control mb-2" placeholder="Fiyat (₺)">
+                        </div>
+
+                    </div>
+
+                    <textarea id="prodDesc" class="form-control mb-2" placeholder="Ürün Açıklaması"></textarea>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <select id="prodCat" class="form-select mb-2">
+                                <option value="">Kategori Seçin...</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <input type="file" id="prodImage" class="form-control mb-2">
+                        </div>
+
+                    </div>
+
+                    <button class="btn btn-success w-100 mt-2" onclick="addProduct()">Ürünü Sisteme Ekle</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="admin-card">
+
+            <h4>Kategoriler (Sürükleyerek sıralayın)</h4>
+
+            <table class="table align-middle" id="adminCategoryTable">
+
+                <thead>
+
+                    <tr>
+                        <th></th>
+                        <th>Resim</th>
+                        <th>Kategori Adı</th>
+                        <th>İşlem</th>
+                    </tr>
+
+                </thead>
+
+                <tbody></tbody>
+
+            </table>
+
+        </div>
+
+        <div class="admin-card">
+
+            <h4>Ürünler</h4>
+
+            <table class="table align-middle" id="adminProductTable">
+
+                <thead>
+
+                    <tr>
+                        <th>Resim</th>
+                        <th>Ürün</th>
+                        <th>Kategori</th>
+                        <th>Fiyat</th>
+                        <th>İşlem</th>
+                    </tr>
+
+                </thead>
+
+                <tbody></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- ÜRÜN DÜZENLE -->
+
+    <div class="modal fade" id="editProductModal" tabindex="-1">
+
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5>Ürünü Düzenle</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <input type="hidden" id="editProdId">
+
+                    <input id="editProdName" class="form-control mb-2">
+
+                    <input id="editProdPrice" class="form-control mb-2">
+
+                    <textarea id="editProdDesc" class="form-control mb-2"></textarea>
+
+                    <select id="editProdCat" class="form-select mb-2"></select>
+
+                    <input type="file" id="editProdImage" class="form-control">
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button class="btn btn-primary w-100" onclick="updateProduct()">Güncelle</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- KATEGORİ DÜZENLE -->
+
+    <div class="modal fade" id="editCategoryModal" tabindex="-1">
+
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5>Kategoriyi Düzenle</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <input type="hidden" id="editCatId">
+
+                    <input id="editCatName" class="form-control mb-2">
+
+                    <input type="file" id="editCatImage" class="form-control">
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button class="btn btn-primary w-100" onclick="updateCategory()">Güncelle</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TOAST -->
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+
+        <div id="liveToast" class="toast align-items-center text-white bg-success border-0">
+
+            <div class="d-flex">
+
+                <div class="toast-body" id="toastMessage"></div>
+
+                <button class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/app.js"></script>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", () => {
+            refreshAll();
+        });
+
+        async function refreshAll() {
+
+            const res = await fetch("/api/categories");
+            const cats = await res.json();
+
+            const select = document.getElementById("prodCat");
+
+            select.innerHTML = '<option value="">Kategori Seçin...</option>';
+
+            cats.forEach(c => {
+                select.innerHTML += `<option value="${c.slug}">${c.name}</option>`;
+            });
+
+            loadAdminCategories();
+            loadAdminTables();
+
+        }
+
+    </script>
+
+</body>
+
+</html>
